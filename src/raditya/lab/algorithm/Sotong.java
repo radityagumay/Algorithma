@@ -15,6 +15,99 @@ public class Sotong {
 	static boolean isBipartite;
 
 	public static void main(String[] args) {
+		cycleGraph();
+	}
+
+	private static void cycleGraph() {
+		Scanner sc = new Scanner(System.in);
+
+		int edges = sc.nextInt();
+		int nodes = sc.nextInt();
+
+		int[][] nodeArray = new int[nodes][2];
+		int nodeLen = nodeArray.length;
+
+		for (int row = 0; row < nodeLen; row++) {
+			for (int col = 0; col < 2; col++) {
+				nodeArray[row][col] = sc.nextInt();
+			}
+		}
+
+		// separated the array
+		int[] a = new int[nodes];
+		int[] b = new int[nodes];
+		for (int i = 0; i < nodeLen; i++) {
+			a[i] = nodeArray[i][0];
+			b[i] = nodeArray[i][1];
+		}
+
+		int[] result = new int[nodes * 2];
+		for (int i = 0; i < nodeLen; i++) {
+			if (result[0] == 0) {
+				result[i] = a[i];
+			}
+			for (int j = 0; j < nodeLen; j++) {
+				if (result[i] == b[j]) {
+					result[i + 1] = a[j];
+					break;
+				}
+				
+			}
+		}
+
+		int[] finalResult = removeDuplicates(result);
+
+		if(finalResult.length <= 3){
+			System.out.print("0");
+			return;
+		}
+		
+		for(int i = 0; i < finalResult.length; i++){
+			if(finalResult[i] != 0){
+				System.out.print(finalResult[i] + " ");		
+			}
+		}
+	}
+
+	public static int[] removeDuplicates(int[] arr) {
+		int end = arr.length;
+
+		for (int i = 0; i < end; i++) {
+			for (int j = i + 1; j < end; j++) {
+				if (arr[i] == arr[j]) {
+					int shiftLeft = j;
+
+					for (int k = j + 1; k < end; k++, shiftLeft++) {
+						arr[shiftLeft] = arr[k];
+					}
+
+					end--;
+					j--;
+				}
+			}
+		}
+
+		int[] whitelist = new int[end];
+
+		for (int i = 0; i < end; i++) {
+			whitelist[i] = arr[i];
+		}
+
+		int temp = 0;
+		for(int i = 0; i < whitelist.length; i++){
+			for(int j = 1; j < (whitelist.length - i); j++){
+				if(whitelist[j - 1] > whitelist[j]){
+					temp = whitelist[j-1];
+					whitelist[j-1] = whitelist[j];
+					whitelist[j] = temp;
+				}
+			}	
+		}
+		
+		return whitelist;
+	}
+
+	private static void bfs() {
 		sc = new Scanner(System.in);
 		T = sc.nextInt();
 		for (testCases = 1; testCases <= T; testCases++) {
